@@ -1,5 +1,19 @@
+diff --git a/CMakeLists.txt b/CMakeLists.txt
+index 0b4c1a3..ad71090 100644
+--- a/CMakeLists.txt
++++ b/CMakeLists.txt
+@@ -243,7 +243,8 @@ ENDIF("${is_system_dir}" STREQUAL "-1")
+ 
+ ### ---[ Find universal dependencies
+ # the gcc-4.2.1 coming with MacOS X is not compatible with the OpenMP pragmas we use, so disabling OpenMP for it
+-if((NOT APPLE) OR (NOT CMAKE_COMPILER_IS_GNUCXX) OR (GCC_VERSION VERSION_GREATER 4.2.1) OR (CMAKE_COMPILER_IS_CLANG))
++option(WITH_OPENMP "Build with parallelization using OpenMP" OFF)
++if(WITH_OPENMP)
+   find_package(OpenMP)
+ endif()
+ if(OPENMP_FOUND)
 diff --git a/apps/CMakeLists.txt b/apps/CMakeLists.txt
-index 67aec2718..0e826fe58 100644
+index 67aec27..0e826fe 100644
 --- a/apps/CMakeLists.txt
 +++ b/apps/CMakeLists.txt
 @@ -6,7 +6,7 @@ set(DEFAULT FALSE)
@@ -17,7 +31,7 @@ index 67aec2718..0e826fe58 100644
  endif(build)
 -
 diff --git a/apps/cloud_composer/CMakeLists.txt b/apps/cloud_composer/CMakeLists.txt
-index d44497524..507c6f9ab 100644
+index d444975..507c6f9 100644
 --- a/apps/cloud_composer/CMakeLists.txt
 +++ b/apps/cloud_composer/CMakeLists.txt
 @@ -1,5 +1,5 @@
@@ -187,7 +201,7 @@ index d44497524..507c6f9ab 100644
      set (VSP_DEPS pcl_octree pcl_segmentation)
      set (VSP_SOURCES tools/supervoxels.cpp "include/pcl/${SUBSYS_NAME}/${SUBSUBSYS_NAME}/tools/impl/supervoxels.hpp")
 diff --git a/apps/in_hand_scanner/CMakeLists.txt b/apps/in_hand_scanner/CMakeLists.txt
-index 5f9e86a36..3e31aa171 100644
+index 5f9e86a..3e31aa1 100644
 --- a/apps/in_hand_scanner/CMakeLists.txt
 +++ b/apps/in_hand_scanner/CMakeLists.txt
 @@ -121,9 +121,11 @@ if(build)
@@ -213,7 +227,7 @@ index 5f9e86a36..3e31aa171 100644
 +  endif()
  endif()
 diff --git a/apps/modeler/CMakeLists.txt b/apps/modeler/CMakeLists.txt
-index 6424d3f82..1c37779ed 100644
+index 6424d3f..1c37779 100644
 --- a/apps/modeler/CMakeLists.txt
 +++ b/apps/modeler/CMakeLists.txt
 @@ -45,7 +45,7 @@ PCL_ADD_DOC("${SUBSUBSYS_NAME}")
@@ -242,7 +256,7 @@ index 6424d3f82..1c37779ed 100644
    add_subdirectory(tools)
  
 diff --git a/apps/optronic_viewer/CMakeLists.txt b/apps/optronic_viewer/CMakeLists.txt
-index 5767aa7e1..cc1829c7a 100644
+index 5767aa7..cc1829c 100644
 --- a/apps/optronic_viewer/CMakeLists.txt
 +++ b/apps/optronic_viewer/CMakeLists.txt
 @@ -48,7 +48,7 @@ if(build)
@@ -280,7 +294,7 @@ index 5767aa7e1..cc1829c7a 100644
 +  endif()
  endif(build)
 diff --git a/apps/point_cloud_editor/CMakeLists.txt b/apps/point_cloud_editor/CMakeLists.txt
-index 7c0275678..dc50aeef1 100644
+index 7c02756..dc50aee 100644
 --- a/apps/point_cloud_editor/CMakeLists.txt
 +++ b/apps/point_cloud_editor/CMakeLists.txt
 @@ -95,6 +95,7 @@ IF(BUILD)
@@ -303,7 +317,7 @@ index 7c0275678..dc50aeef1 100644
 +  endif()
  ENDIF(BUILD)
 diff --git a/cmake/pcl_targets.cmake b/cmake/pcl_targets.cmake
-index 30696346f..d7ef29f39 100644
+index 3069634..d7ef29f 100644
 --- a/cmake/pcl_targets.cmake
 +++ b/cmake/pcl_targets.cmake
 @@ -201,7 +201,7 @@ macro(PCL_ADD_LIBRARY _name _component)
@@ -440,7 +454,7 @@ index 30696346f..d7ef29f39 100644
      endforeach(dep)
      file(MAKE_DIRECTORY "${CMAKE_CURRENT_BINARY_DIR}/html")
 diff --git a/gpu/kinfu/tools/CMakeLists.txt b/gpu/kinfu/tools/CMakeLists.txt
-index 0356c4f54..b4706ca39 100644
+index 0356c4f..b4706ca 100644
 --- a/gpu/kinfu/tools/CMakeLists.txt
 +++ b/gpu/kinfu/tools/CMakeLists.txt
 @@ -11,17 +11,17 @@ if(WITH_OPENNI)
@@ -476,7 +490,7 @@ index 0356c4f54..b4706ca39 100644
  	## KINECT FUSION SIMULATION - DISABLED FOR NOW
  	#find_package(GLEW)
 diff --git a/gpu/kinfu_large_scale/tools/CMakeLists.txt b/gpu/kinfu_large_scale/tools/CMakeLists.txt
-index b70950e4e..74002638e 100644
+index b70950e..7400263 100644
 --- a/gpu/kinfu_large_scale/tools/CMakeLists.txt
 +++ b/gpu/kinfu_large_scale/tools/CMakeLists.txt
 @@ -20,8 +20,10 @@ if(WITH_OPENNI)
@@ -522,7 +536,7 @@ index b70950e4e..74002638e 100644
  
  endif()
 diff --git a/gpu/people/tools/CMakeLists.txt b/gpu/people/tools/CMakeLists.txt
-index e3d18a8aa..dd16cae84 100644
+index e3d18a8..dd16cae 100644
 --- a/gpu/people/tools/CMakeLists.txt
 +++ b/gpu/people/tools/CMakeLists.txt
 @@ -16,6 +16,7 @@ include_directories(${VTK_INCLUDE_DIRS})
@@ -542,7 +556,7 @@ index e3d18a8aa..dd16cae84 100644
  #PCL_ADD_EXECUTABLE(people_pcd_folder "${SUBSYS_NAME}" people_pcd_folder.cpp)
  #target_link_libraries (people_pcd_folder pcl_common pcl_filters pcl_kdtree pcl_segmentation pcl_kdtree pcl_gpu_people pcl_filters pcl_io pcl_visualization ${Boost_LIBRARIES})
 diff --git a/io/tools/CMakeLists.txt b/io/tools/CMakeLists.txt
-index 6df4e5761..3209b5f8f 100644
+index 6df4e57..3209b5f 100644
 --- a/io/tools/CMakeLists.txt
 +++ b/io/tools/CMakeLists.txt
 @@ -1,3 +1,5 @@
@@ -560,7 +574,7 @@ index 6df4e5761..3209b5f8f 100644
  #libply inherited tools
  add_subdirectory(ply)
 diff --git a/io/tools/ply/CMakeLists.txt b/io/tools/ply/CMakeLists.txt
-index ec15773f3..6928d0931 100644
+index ec15773..6928d09 100644
 --- a/io/tools/ply/CMakeLists.txt
 +++ b/io/tools/ply/CMakeLists.txt
 @@ -1,3 +1,4 @@
@@ -574,7 +588,7 @@ index ec15773f3..6928d0931 100644
  target_link_libraries(pcl_plyheader pcl_io_ply)
 +endif()
 diff --git a/outofcore/tools/CMakeLists.txt b/outofcore/tools/CMakeLists.txt
-index 17444d296..517476d51 100644
+index 17444d2..517476d 100644
 --- a/outofcore/tools/CMakeLists.txt
 +++ b/outofcore/tools/CMakeLists.txt
 @@ -1,9 +1,11 @@
@@ -617,7 +631,7 @@ index 17444d296..517476d51 100644
    endif("${VTK_MAJOR_VERSION}.${VTK_MINOR_VERSION}" VERSION_GREATER "5.8")
  endif(NOT VTK_FOUND)
 diff --git a/people/CMakeLists.txt b/people/CMakeLists.txt
-index 8907e012f..dc73b3636 100644
+index 8907e01..dc73b36 100644
 --- a/people/CMakeLists.txt
 +++ b/people/CMakeLists.txt
 @@ -20,7 +20,7 @@ PCL_SUBSYS_DEPEND(build "${SUBSYS_NAME}" DEPS ${SUBSYS_DEPS})
@@ -643,7 +657,7 @@ index 8907e012f..dc73b3636 100644
          target_link_libraries(pcl_ground_based_rgbd_people_detector pcl_common pcl_kdtree pcl_search pcl_features pcl_sample_consensus pcl_filters pcl_io pcl_visualization pcl_segmentation pcl_people)
      endif()
 diff --git a/simulation/tools/CMakeLists.txt b/simulation/tools/CMakeLists.txt
-index 368d8aecc..b735a096a 100644
+index 368d8ae..b735a09 100644
 --- a/simulation/tools/CMakeLists.txt
 +++ b/simulation/tools/CMakeLists.txt
 @@ -1,25 +1,25 @@
@@ -699,7 +713,7 @@ index 368d8aecc..b735a096a 100644
  	    ${GLEW_LIBRARIES} ${GLUT_LIBRARIES} ${OPENGL_LIBRARIES} ${GLEW_LIBRARIES})
    endif(GLUT_FOUND)
 diff --git a/tools/CMakeLists.txt b/tools/CMakeLists.txt
-index 50028cb42..eb63916cd 100644
+index 50028cb..eb63916 100644
 --- a/tools/CMakeLists.txt
 +++ b/tools/CMakeLists.txt
 @@ -8,7 +8,7 @@ set (REASON "")
@@ -849,7 +863,7 @@ index 50028cb42..eb63916cd 100644
  
  endif (BUILD_tools)
 diff --git a/visualization/tools/CMakeLists.txt b/visualization/tools/CMakeLists.txt
-index 2b515f58d..e0044d232 100644
+index 2b515f5..e0044d2 100644
 --- a/visualization/tools/CMakeLists.txt
 +++ b/visualization/tools/CMakeLists.txt
 @@ -1,9 +1,10 @@

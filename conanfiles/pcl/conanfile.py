@@ -39,6 +39,7 @@ class PclConan(ConanFile):
         cmake.definitions["WITH_PNG"] = "OFF"
         cmake.definitions["WITH_QHULL"] = "OFF"
         cmake.definitions["WITH_VTK"] = "OFF"
+        cmake.definitions["WITH_OPENMP"] = "OFF"
         cmake.definitions["Boost_INCLUDE_DIR"] = self.deps_cpp_info["boost"].include_paths[0]
         cmake.definitions["Boost_DATE_TIME_LIBRARY_RELEASE:FILEPATH"] = "{}/libboost_date_time.a".format(self.deps_cpp_info["boost"].lib_paths[0])
         cmake.definitions["Boost_DATE_TIME_LIBRARY_DEBUG:FILEPATH"] = "{}/libboost_date_time.a".format(self.deps_cpp_info["boost"].lib_paths[0])
@@ -63,7 +64,7 @@ class PclConan(ConanFile):
     def requirements(self):
         self.requires("boost/1.70.0@bashbug/stable")
         self.requires("flann/1.9.1@bashbug/stable") # > 1.8.5 have lz4 issue: https://github.com/mariusmuja/flann/issues/384
-        self.requires("eigen/3.3.7@conan/stable")
+        self.requires("eigen/3.3.7")
 
     def source(self):
         git = tools.Git(folder=self.name)

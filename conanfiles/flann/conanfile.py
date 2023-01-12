@@ -36,6 +36,7 @@ class FlannConan(ConanFile):
         cmake.definitions["BUILD_EXAMPLES"] = "OFF"
         cmake.definitions["BUILD_TESTS"] = "OFF"
         cmake.definitions["BUILD_DOC"] = "OFF"
+        cmake.definitions["USE_OPENMP"] = "OFF"
         cmake = self._configure_toolchain(cmake)
         cmake.configure(build_folder=str(self.settings.arch))
         return cmake
